@@ -29,7 +29,7 @@ const getBlogs = async function (req, res) {
 
         if (Object.keys(queries) == 0) {
             const result1 = await blogModel.find({ isDeleted: false, isPublished: true })//.count()
-            if (result1.length == 0) return res.status(404).send({ status: false, msg: "no  found" })
+            if (result1.length == 0) return res.status(404).send({ status: false, msg: "no Data found" })
             return res.status(200).send({ status: true, data: result1 })
         }
         // ------------------------------------- this is for query param -------------------------------------
@@ -44,6 +44,7 @@ const getBlogs = async function (req, res) {
     }
 }
 
+// --------------------------------------- deleteBlogs by param -----------------------------------
 
 const deleteBlogsByParam = async function (req, res) {
     try {
@@ -76,7 +77,6 @@ let deleteBlogsByQuery = async function (req, res) {
         let subcategory = query.subcategory
         let unpublished = query.unpublished
 
-
         const temp = {}
         if (category) { temp.category = category }
         if (authorid) { temp.authorId = authorid }
@@ -86,14 +86,12 @@ let deleteBlogsByQuery = async function (req, res) {
             if (unpublished == "false") {
                 temp.isPublished = false
             } else { temp.isPublished = true }
-
         }
         const deleted = await blogModel.findOne(temp).select({ isDeleted: 1, _id: 0 })
         if (deleted.isDeleted == true) return res.status(404).send({ status: false, msg: "already deleted" })
-        const result = await blogModel.findOneAndUpdate(temp, { isDeleted: true, deletedAt: Date.now() }, { new: true })
-        return res.status(200).send({ status: true, data: result })
+        await blogModel.findOneAndUpdate(temp, { isDeleted: true, deletedAt: Date.now() }, { new: true })
+        return res.status(200).send({ status: true })
     }
-
     catch (err) {
         return res.status(500).send({ status: false, msg: err.message })
     }
