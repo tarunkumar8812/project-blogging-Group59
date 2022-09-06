@@ -7,10 +7,10 @@ const app = express();
 const moment = require("moment")
 
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+// app.use(bodyParser.urlencoded({ extended: true })); // -->  it is not mandatory
 
 mongoose.connect("mongodb+srv://TarunKumar123:xLcX9W1SI9646ftM@cluster1.tpwtwiv.mongodb.net/Project_1", {
-    useNewUrlParser: true
+    useNewUrlParser: true // 
 })
     .then(() => console.log("MongoDb is connected"))
     .catch(err => console.log(err))
@@ -24,7 +24,7 @@ app.use(
     }
 );
 
-app.use('/', route);
+app.use('/', route);// -->  url starts from ' / '
 
 app.listen(process.env.PORT || 3000, function () {
     console.log('Express app running on port ' + (process.env.PORT || 3000))

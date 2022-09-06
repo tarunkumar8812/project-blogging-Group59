@@ -5,8 +5,14 @@ const blogController = require("../controllers/blogController")
 
 
 
-router.post("/authors", authorController.createAuthor)
+router.post("/authors", authorController.createAuthor) // to create authors
 
-router.post("/blogs", blogController.createBlogs)
+router.post("/blogs", blogController.createBlogs) // to create blogs
+
+router.get("/blogs", blogController.getBlogs) // to finding blogs
+
+router.delete("/blogs/:blogId", blogController.deleteBlogsByParam) // to deleting blogs by param
+
+router.delete("/blogs", blogController.deleteBlogsByQuery) // to deleting blogs by query
 
 module.exports = router;
