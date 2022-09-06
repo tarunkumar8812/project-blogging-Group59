@@ -86,6 +86,63 @@ const updateBlog = async function (req, res) {
 
 };
 
+// --------------------------------------- deleteBlogs by param -----------------------------------
+
+const deleteBlogsByParam = async function (req, res) {
+    try {
+        const blogId = req.params.blogId
+        const blog = await blogModel.findById(blogId).select({ isDeleted: 1, _id: 0 })
+
+        if (!blog) return res.status(404).send({ status: false, msg: "no data found" })
+
+        if (blog.isDeleted == true) return res.status(404).send({ status: false, msg: "blog already deleted" })
+
+        await blogModel.findByIdAndUpdate(blogId, { isDeleted: true, deletedAt: Date.now() }, { new: true })
+
+        return res.status(200).send({ status: true, msg: "blog deleted" })
+    }
+    catch (err) {
+        return res.status(500).send({ status: false, msg: err.message })
+    }
+}
+// --------------------------------------- deleteBlogs by Qyery -----------------------------------
+
+let deleteBlogsByQuery = async function (req, res) {
+    try {
+        let query = req.query
+        if (Object.keys(query) == 0) return res.status(400).send({ status: false, msg: "please apply filter" })
+
+        let category = req.query.category
+        let authorid = query.authorid
+        let tag = query.tag
+        let subcategory = query.subcategory
+        let unpublished = query.unpublished
+
+
+        const temp = {}
+        if (category) { temp.category = category }
+        if (authorid) { temp.authorId = authorid }
+        if (tag) { temp.tags = tag }
+        if (subcategory) { temp.subcategory = subcategory }
+        if (unpublished) {
+            if (unpublished == "false") {
+                temp.isPublished = false
+            } else { temp.isPublished = true }
+
+        }
+        const deleted = await blogModel.findOne(temp).select({ isDeleted: 1, _id: 0 })
+        if (deleted.isDeleted == true) return res.status(404).send({ status: false, msg: "already deleted" })
+        const result = await blogModel.findOneAndUpdate(temp, { isDeleted: true, deletedAt: Date.now() }, { new: true })
+        return res.status(200).send({ status: true, data: result })
+    }
+
+    catch (err) {
+        return res.status(500).send({ status: false, msg: err.message })
+    }
+}
+
 
 module.exports.createBlogs = createBlogs
 module.exports.updateBlog = updateBlog
+module.exports.deleteBlogsByParam = deleteBlogsByParam
+module.exports.deleteBlogsByQuery = deleteBlogsByQuery
