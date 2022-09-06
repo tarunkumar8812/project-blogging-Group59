@@ -15,4 +15,10 @@ router.delete("/blogs/:blogId", blogController.deleteBlogsByParam) // to deletin
 
 router.delete("/blogs", blogController.deleteBlogsByQuery) // to deleting blogs by query
 
+router.put("/blogs/:blogId",blogController.updateBlog)
+
+router.delete("/blogs/:blogId",blogController.deleteBlogsByParam)
+
+router.delete("/blogs",blogController.deleteBlogsByParam)
+
 module.exports = router;
