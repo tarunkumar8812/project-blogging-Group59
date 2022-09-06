@@ -13,6 +13,6 @@ router.put("/blogs/:blogId",blogController.updateBlog)
 
 router.delete("/blogs/:blogId",blogController.deleteBlogsByParam)
 
-router.delete("/blogs",blogController.deleteBlogsByParam)
+router.delete("/blogs",blogController.deleteBlogsByQuery)
 
 module.exports = router;
